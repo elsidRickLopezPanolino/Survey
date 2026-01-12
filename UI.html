@@ -45,14 +45,18 @@ function handleSliderInput(e) {
   const sliders = Array.from(document.querySelectorAll(".phoneSlider"));
   const index = sliders.indexOf(e.target);
 
+  // Calculate total value so far
   let totalValue = sliders.reduce((sum, s) => sum + parseInt(s.value), 0);
 
-  // Fill sliders left-to-right continuously
+  // Determine remaining value
   let remaining = totalValue;
-  sliders.forEach(s => {
-    if (remaining >= parseInt(s.max)) {
-      s.value = s.max;
-      remaining -= s.max;
+
+  // Update sliders proportionally
+  sliders.forEach((s, i) => {
+    const max = parseInt(s.max);
+    if (remaining >= max) {
+      s.value = max;
+      remaining -= max;
     } else {
       s.value = remaining;
       remaining = 0;
@@ -107,6 +111,7 @@ function expandPhone() {
   updatePhoneValue();
 }
 </script>
+
 
 </body>
 </html>

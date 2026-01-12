@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Survey</title>
+<style>
+  body { font-family: Arial; padding: 20px; background: #f4f4f4; }
+  input, button, select { margin: 5px 0; padding: 5px; }
+  .slider { width: 200px; display: block; margin-bottom: 5px; }
+  #phoneValue, #genderDisplay { font-weight: bold; display: block; margin-bottom: 10px; }
+  label { display: block; margin-top: 10px; }
+</style>
+</head>
+<body>
+
+<h2>Survey</h2>
+
+<!-- -------------------- Name Section -------------------- -->
+<label>Name: <span id="nameDisplay"></span></label>
+<input type="text" id="nameInput" placeholder="Type your name" oninput="updateName()">
+
+<script>
+const nameInput = document.getElementById("nameInput");
+const nameDisplay = document.getElementById("nameDisplay");
+function updateName(){
+  nameDisplay.innerText = nameInput.value || "Simple Name";
+}
+</script>
+
+<!-- -------------------- Birthday Section -------------------- -->
+<h3>Birthday</h3>
+<label>Year: <span id="yearDisplay">0</span></label>
+<input type="range" style="width: 600px;" id="yearSlider" min="0" max="3000" value="0" class="slider" oninput="updateYear()">
+
+<label>Month:</label>
+<select id="monthSelect" onchange="validateBirthday()">
+  <option value="0">Jan</option>
+  <option value="2">11</option>
+  <option value="1">Feb</option>
+  <option value="6">July</option>
+  <option value="11">December</option>
+  <option value="10">011</option>
+  <option value="7">8</option>
+  <option value="4">May</option>
+  <option value="9">Oct</option>
+  <option value="5">6</option>
+  <option value="3">04</option>
+  <option value="8">September</option>
+</select>
+
+<label>Date:</label>
+<div id="dateCheckboxes">
+  <label><input type="checkbox" value="18" onchange="validateBirthday()">18</label>
+  <label><input type="checkbox" value="3" onchange="validateBirthday()">3</label>
+  <label><input type="checkbox" value="25" onchange="validateBirthday()">25</label>
+  <label><input type="checkbox" value="7" onchange="validateBirthday()">7</label>
+  <label><input type="checkbox" value="12" onchange="validateBirthday()">12</label>
+  <label><input type="checkbox" value="30" onchange="validateBirthday()">30</label>
+  <label><input type="checkbox" value="1" onchange="validateBirthday()">1</label>
+  <label><input type="checkbox" value="21" onchange="validateBirthday()">21</label>
+  <label><input type="checkbox" value="9" onchange="validateBirthday()">9</label>
+  <label><input type="checkbox" value="27" onchange="validateBirthday()">27</label>
+  <label><input type="checkbox" value="15" onchange="validateBirthday()">15</label>
+  <label><input type="checkbox" value="5" onchange="validateBirthday()">5</label>
+  <label><input type="checkbox" value="23" onchange="validateBirthday()">23</label>
+  <label><input type="checkbox" value="31" onchange="validateBirthday()">31</label>
+  <label><input type="checkbox" value="14" onchange="validateBirthday()">14</label>
+  <label><input type="checkbox" value="2" onchange="validateBirthday()">2</label>
+  <label><input type="checkbox" value="28" onchange="validateBirthday()">28</label>
+  <label><input type="checkbox" value="11" onchange="validateBirthday()">11</label>
+  <label><input type="checkbox" value="20" onchange="validateBirthday()">20</label>
+  <label><input type="checkbox" value="6" onchange="validateBirthday()">6</label>
+  <label><input type="checkbox" value="19" onchange="validateBirthday()">19</label>
+  <label><input type="checkbox" value="4" onchange="validateBirthday()">4</label>
+  <label><input type="checkbox" value="22" onchange="validateBirthday()">22</label>
+  <label><input type="checkbox" value="10" onchange="validateBirthday()">10</label>
+  <label><input type="checkbox" value="26" onchange="validateBirthday()">26</label>
+  <label><input type="checkbox" value="8" onchange="validateBirthday()">8</label>
+  <label><input type="checkbox" value="29" onchange="validateBirthday()">29</label>
+  <label><input type="checkbox" value="16" onchange="validateBirthday()">16</label>
+  <label><input type="checkbox" value="13" onchange="validateBirthday()">13</label>
+  <label><input type="checkbox" value="24" onchange="validateBirthday()">24</label>
+  <label><input type="checkbox" value="17" onchange="validateBirthday()">17</label>
+</div>
+
+<label>Day:</label>
+<select id="daySelect" onchange="validateBirthday()">
+  <option value="0">Mon</option>
+  <option value="5">Sat</option>
+  <option value="1">Tuesday</option>
+  <option value="4">Friday</option>
+  <option value="3">Thu</option>
+  <option value="6">Sun</option>
+  <option value="2">Wed</option>
+
+</select>
+
+<script>
+const yearSlider = document.getElementById("yearSlider");
+const yearDisplay = document.getElementById("yearDisplay");
+const monthSelect = document.getElementById("monthSelect");
+const dateCheckboxes = document.querySelectorAll("#dateCheckboxes input[type=checkbox]");
+const daySelect = document.getElementById("daySelect");
+
+function updateYear() {
+  yearDisplay.innerText = yearSlider.value;
+  validateBirthday();
+}
+
+function getSelectedDate() {
+  for (const c of dateCheckboxes) {
+    if (c.checked) return parseInt(c.value);
+  }
+  return null;
+}
+
+function validateBirthday() {
+  const year = parseInt(yearSlider.value);
+  const month = parseInt(monthSelect.value);
+  const date = getSelectedDate();
+  const day = parseInt(daySelect.value);
+
+  if (!date) return;
+
+  const jsDate = new Date(year, month, date);
+  const correctDay = jsDate.getDay(); // 0=Sun ... 6=Sat
+  const dayMap = [6,0,1,2,3,4,5]; // JS Sunday(0) => 6(Sun in our select)
+  const mappedDay = dayMap[correctDay];
+
+  if (mappedDay !== day) {
+    alert("Day doesn't match the selected date! Resetting month/date/day.");
+    monthSelect.selectedIndex = 0;
+    dateCheckboxes.forEach(c => c.checked = false);
+    daySelect.selectedIndex = 0;
+  }
+}
+</script>
+<br><br><br><br>
+<!-- -------------------- Gender Section -------------------- -->
+<label>Gender: <span id="genderDisplay"></span></label>
+<input type="range" id="genderSlider" min="0" max="1" step="1">
+<button onclick="expandGender()">Expand Gender</button>
+
+<script>
+const genderSlider = document.getElementById("genderSlider");
+const genderDisplay = document.getElementById("genderDisplay");
+
+const genderWords = [
+"Male", "Female", "Helicopter", "Banana", "Unicorn", "Dragon", "Penguin", "Laptop", "Cactus", "Rainbow",
+"Robot", "Pumpkin", "Spaceship", "Franz", "Cookie", "Coffee", "Sunshine", "Octopus", "Pineapple", "Giraffe",
+"Wizard", "Socks", "Monkey", "Elephant", "Glasses", "Shark", "Donut", "Chair", "Moon", "Star",
+"Butterfly", "H2O", "Keyboard", "Car", "Candle", "Book", "Waterfall", "Lesbian", "Camera", "What?", "Snowflake",
+"Apple", "Laptop", "Rocket", "Cup", "Laugh", "67", "Bag", "Tree", "Flower", "Bottle", "67", "Bisexual",
+"Cake", "Phone", "Chair", "About", "Horse", "Lamp", "Pencil", "Dragon", "Electricity", "Spoon",
+"Plate", "4", "Helmet", "Armor", "Cloud", "Deal", "Blue Origin", "DreamWorks", "Racer", "Ghoul", "Eager", "Tutor",
+"Algae", "Chaff", "Love", "Tdfgs", "Speed", "Lads", ":", "Y", "%", "Yellow Basket", "Instruction",
+"Gay", "8", "Female", "Coca-Cola", "Nike", "Starbucks", "What the", "Hello World", "I love pizza", "42", "∞",
+"#hashtag", "AI is everywhere", "The quick brown fox", "Random sentence!", "123ABC", "Pi ≈ 3.14",
+"Elon Musk", "Tesla", "Spider-Man", "M&M's", "Minecraft", "LOL", "XD", "Cupcake", "🤖", "🎉",
+"Planet Earth", "Gravity", "Mount Everest", "Bitcoin", "Ethereum", "Figma", "ReactJS", "Node.js", "CSS",
+"HTML", "JavaScript", "Python", "CoffeeScript", "Bubble tea", "Sushi", "Ramen", "Cheeseburger",
+"Galaxy S21", "iPhone", "MacBook", "AirPods", "Nintendo Switch", "PlayStation", "Xbox", "GTA V", "4+6=10",
+ "42 is the answer", "Lorem Ipsum", "Foobar", "Bazinga", "False", "Oil", "Queen",
+"Quantum Leap", "Time Travel", "🎵 Music Lover", "I Love CMG", "Hakuna Matata", "Netflix", "Bulbasaur",
+"Houston, we have a problem", "Target", "Rick and Morty", "Eat fresh", "The Matrix", "Ideas for life",
+"Captain America", "Burger King", "Run Forrest, run", "Nintendo", "Obey your thirst", "The Simpsons",
+"Spider-Man", "Because you're worth it", "Pikachu", "Life is like a box of chocolates", "PlayStation",
+"I'll be back", "South Park", "Chipotle", "The truth is out there", "Sony", "OpenAI",
+"The happiest place on Earth", "Squirtle", "Have it your way", "Marvel", "Show me the money",
+"Friends", "McDonald's", "Infinity War", "Every kiss begins with Kay", "Superman", "Think different",
+"The world’s local bank", "The quick brown fox jumps over the lazy dog",
+"Diamonds are forever", "Five Guys", "Snap! Crackle! Pop!", "Warner Bros", "The king of beers",
+ "Six Seven", "May the Force be with you", "4 of Spades", "The best", "Naaah","Just kidding", "Surprise me", "Okay"
+];
+
+genderDisplay.innerText = genderWords[genderSlider.value];
+
+genderSlider.addEventListener("input", () => {
+  genderDisplay.innerText = genderWords[genderSlider.value];
+});
+
+function expandGender() {
+  genderSlider.max = genderWords.length - 1;
+  genderSlider.style.width = "100%";
+  genderDisplay.innerText = genderWords[genderSlider.value];
+}
+</script>
+
+<br><br><br><br>
+<!-- -------------------- Phone Section -------------------- -->
+<div id="phoneContainer">
+  <label>Phone Number: <span id="phoneValue">00000000000</span></label>
+  <input type="range" class="slider phoneSlider" min="0" max="99999999999" value="0">
+</div>
+<button id="phoneButton" onclick="expandPhone()">Expand Phone</button>
+<br>
+<button id="advancedPhoneButton" onclick="advancedPhone()" 
+  style="background-color: #00BB00; color: white;">Advanced Selection</button>
+  
+<script>
+const phoneContainer = document.getElementById("phoneContainer");
+const phoneButton = document.getElementById("phoneButton");
+const phoneValue = document.getElementById("phoneValue");
+const advancedPhoneButton = document.getElementById("advancedPhoneButton");
+
+const TOTAL_MAX = 99999999999;
+let firstExpanded = false;
+
+// Attach initial listener
+document.querySelector(".phoneSlider").addEventListener("input", handleSliderInput);
+updatePhoneValue();
+
+// --- Update phone display ---
+function updatePhoneValue() {
+  const sliders = document.querySelectorAll(".phoneSlider");
+  let total = 0;
+  sliders.forEach(s => total += parseInt(s.value));
+  phoneValue.innerText = total.toString().padStart(11,'0');
+}
+
+// --- Handle slider input ---
+function handleSliderInput(e){
+  const sliders = Array.from(document.querySelectorAll(".phoneSlider"));
+  const index = sliders.indexOf(e.target);
+
+  let clickedValue = parseInt(e.target.value);
+  let prevTotal = sliders.slice(0,index).reduce((sum,s)=>sum+parseInt(s.value),0);
+  let targetTotal = prevTotal + clickedValue;
+
+  let remaining = targetTotal;
+  sliders.forEach(s=>{
+    const max = parseInt(s.max);
+    if(remaining>=max){
+      s.value = max;
+      remaining-=max;
+    }else{
+      s.value = remaining;
+      remaining=0;
+    }
+  });
+  updatePhoneValue();
+}
+
+// --- Expand phone sliders ---
+function expandPhone(){
+  let sliders = Array.from(document.querySelectorAll(".phoneSlider"));
+  const currentTotal = sliders.reduce((sum,s)=>sum+parseInt(s.value),0);
+
+  if(!firstExpanded){
+    sliders[0].style.width="100%";
+    phoneButton.textContent="Expand More";
+    firstExpanded=true;
+    return;
+  }
+
+  const newSliderCount = sliders.length +1;
+  const newMax = Math.floor(TOTAL_MAX/newSliderCount);
+  sliders.forEach(s=>s.max=newMax);
+
+  const newSlider = document.createElement("input");
+  newSlider.type="range";
+  newSlider.className="slider phoneSlider";
+  newSlider.min=0;
+  newSlider.max=newMax;
+  newSlider.style.width="100%";
+  newSlider.addEventListener("input",handleSliderInput);
+  phoneContainer.appendChild(newSlider);
+
+  sliders = Array.from(document.querySelectorAll(".phoneSlider"));
+  let remaining = currentTotal;
+  sliders.forEach(s=>{
+    if(remaining>=newMax){
+      s.value=newMax;
+      remaining-=newMax;
+    }else{
+      s.value=remaining;
+      remaining=0;
+    }
+  });
+
+  updatePhoneValue();
+}
+
+
+// --- Advanced selection with animated "AI statements" ---
+function advancedPhone() {
+  // Hide sliders and buttons
+  document.querySelectorAll(".phoneSlider").forEach(s => s.style.display = "none");
+  phoneButton.style.display = "none";
+  advancedPhoneButton.style.display = "none";
+
+  // Create animation display
+  const animDiv = document.createElement("div");
+  animDiv.id = "animDiv";
+  animDiv.style.fontFamily = "monospace";
+  animDiv.style.fontSize = "1.5em";
+  animDiv.style.marginTop = "10px";
+  animDiv.style.whiteSpace = "pre";
+  animDiv.innerText = "Initializing advanced number generation...\n";
+  phoneContainer.appendChild(animDiv);
+
+  // Random AI-style statements
+  const statements = [
+    "Analyzing digits...",
+    "Simulating user patterns...",
+    "Generating plausible sequences...",
+    "Encrypting...",
+    "Validating interdimensional checksum...",
+    "Finalizing 11-digit output...",
+    "Calibrating number stabilizers...",
+    "Engaging randomness engine..."
+  ];
+
+  let finalNumber = "";
+  for(let i=0;i<11;i++){
+    finalNumber += Math.floor(Math.random()*10);
+  }
+
+  let animStep = 0;
+  const totalSteps = 10; // total animation frames
+
+  const interval = setInterval(() => {
+    // Pick a random statement to show
+    const statement = statements[Math.floor(Math.random()*statements.length)];
+
+    // Generate a random 11-digit number for effect
+    let tempNumber = "";
+    for(let j=0;j<11;j++){
+      tempNumber += Math.floor(Math.random()*10);
+    }
+
+    animDiv.innerText = `${statement}`;
+    animStep++;
+
+    if(animStep >= totalSteps){
+      clearInterval(interval);
+      // Final display
+      animDiv.innerText = `Is this your number?\n${finalNumber}`;
+
+      // Show confirmation
+      const confirmDiv = document.createElement("div");
+      confirmDiv.id = "confirmDiv";
+      confirmDiv.style.marginTop = "10px";
+      confirmDiv.innerHTML = `
+        <button onclick="confirmYes('${finalNumber}')">Yes</button>
+        <button onclick="confirmNo()">No</button>
+      `;
+      phoneContainer.appendChild(confirmDiv);
+    }
+  }, 500); // change every 100ms for a smooth effect
+}
+
+function confirmYes(number){
+  alert("Great! Your number is " + number);
+  document.getElementById("confirmDiv").remove();
+  document.getElementById("animDiv").remove();
+}
+
+function confirmNo(){
+  alert("Okay, returning to basic input.");
+  document.getElementById("confirmDiv").remove();
+  document.getElementById("animDiv").remove();
+  // Restore sliders and buttons
+  document.querySelectorAll(".phoneSlider").forEach(s => s.style.display = "block");
+  phoneButton.style.display = "inline-block";
+  advancedPhoneButton.style.display = "inline-block";
+}
+</script>
+
+
+<br><br><br><br>
+
+<button id="submitButton">Submit</button>
+<div id="loading" style="display:none; margin-top:10px;">Loading... ⏳</div>
+
+<script>
+const button = document.getElementById("submitButton");
+const loading = document.getElementById("loading");
+
+button.addEventListener("click", () => {
+  // Show loading animation
+  loading.style.display = "block";
+  button.disabled = true;
+
+  // Wait 1.5 seconds, then redirect to YouTube Rickroll
+  setTimeout(() => {
+    window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+  }, 1500);
+});
+</script>
+
+</body>
+</html>
