@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phone Slider Precision Puzzle</title>
+<style>
+  body { font-family: Arial; padding: 20px; background: #f4f4f4; }
+  input, button { margin: 5px 0; padding: 5px; }
+  .slider { width: 200px; display: block; margin-bottom: 5px; }
+  #phoneValue { font-weight: bold; display: block; margin-bottom: 10px; }
+</style>
+</head>
+<body>
+
+<h2>Puzzle: Phone Slider Precision</h2>
+
+<div id="phoneContainer">
+  <label>Phone Number: <span id="phoneValue">00000000000</span></label>
+  <input type="range" class="slider phoneSlider" min="0" max="99999999999" value="0">
+</div>
+<button id="phoneButton" onclick="expandPhone()">Expand</button>
+
+<script>
+const phoneContainer = document.getElementById("phoneContainer");
+const phoneButton = document.getElementById("phoneButton");
+const phoneValue = document.getElementById("phoneValue");
+
+const TOTAL_MAX = 99999999999;
+let firstExpanded = false;
+
+// Attach initial listener
+document.querySelector(".phoneSlider").addEventListener("input", handleSliderInput);
+updatePhoneValue();
+
+function updatePhoneValue() {
+  const sliders = document.querySelectorAll(".phoneSlider");
+  let total = 0;
+  sliders.forEach(s => total += parseInt(s.value));
+  phoneValue.innerText = total.toString().padStart(11, '0');
+}
+
+// Handle continuous slider behavior
+function handleSliderInput(e) {
+  const sliders = Array.from(document.querySelectorAll(".phoneSlider"));
+  const index = sliders.indexOf(e.target);
+
+  let totalValue = sliders.reduce((sum, s) => sum + parseInt(s.value), 0);
+
+  // Fill sliders left-to-right continuously
+  let remaining = totalValue;
+  sliders.forEach(s => {
+    if (remaining >= parseInt(s.max)) {
+      s.value = s.max;
+      remaining -= s.max;
+    } else {
+      s.value = remaining;
+      remaining = 0;
+    }
+  });
+
+  updatePhoneValue();
+}
+
+// Expand function
+function expandPhone() {
+  let sliders = Array.from(document.querySelectorAll(".phoneSlider"));
+  const currentTotal = sliders.reduce((sum, s) => sum + parseInt(s.value), 0);
+
+  if(!firstExpanded){
+    sliders[0].style.width = "100%";
+    phoneButton.textContent = "Expand More";
+    firstExpanded = true;
+    return;
+  }
+
+  // Add new slider
+  const newSliderCount = sliders.length + 1;
+  const newMax = Math.floor(TOTAL_MAX / newSliderCount);
+
+  // Adjust max for all sliders
+  sliders.forEach(s => s.max = newMax);
+
+  const newSlider = document.createElement("input");
+  newSlider.type = "range";
+  newSlider.className = "slider phoneSlider";
+  newSlider.min = 0;
+  newSlider.max = newMax;
+  newSlider.style.width = "100%";
+  newSlider.addEventListener("input", handleSliderInput);
+  phoneContainer.appendChild(newSlider);
+
+  // Recalculate slider values based on current total
+  sliders = Array.from(document.querySelectorAll(".phoneSlider"));
+  let remaining = currentTotal;
+
+  sliders.forEach(s => {
+    if (remaining >= parseInt(s.max)) {
+      s.value = s.max;
+      remaining -= s.max;
+    } else {
+      s.value = remaining;
+      remaining = 0;
+    }
+  });
+
+  updatePhoneValue();
+}
+</script>
+
+</body>
+</html>
